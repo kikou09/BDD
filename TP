@@ -74,7 +74,7 @@ SELECT DISTINCT a.raison , a.activité
 FROM entreprise a join entreprise b USING(activité)
 WHERE a.entr!=b.entr
 
-REQUETE AVEC AGREGATION
+REQUETE AVEC AGREGATION SANS REGROUPEMENT
 2.1
 
 SELECT ROUND(AVG(prix),2) as prixmoyen
@@ -91,6 +91,42 @@ FROM session
 WHERE principal is not NULL
 
 
+REQUETES AVEC AGREGATION ET REGROUPEMENT
 
+3.1
+SELECT durée , COUNT(sess) as sessions
+FROM session
+GROUP BY durée
 
+3.2
+SELECT sess , nb_inscrits , COUNT(anim) as animateurs
+FROM session join animer using (sess)
+GROUP BY sess
+
+3.3
+SELECT sess , nb_inscrits as valeur_renseignée , COUNT(inscrit) as valeur_calculée
+FROM session join inscrire using (sess)
+GROUP BY sess
+HAVING valeur_renseignée != valeur_calculée
+
+3.4
+SELECT raison , COUNT(*) as inscriptions , COUNT(DISTINCT inscrit) as envoyées , SUM(prix) as montant
+FROM entreprise join participant using (entr) join inscrire using (inscrit) join session using(sess)
+WHERE entr IS NOT NULL
+GROUP BY  raison
+ORDER BY  montant DESC
+LIMIT 3
+
+3.5
+SELECT DATE_FORMAT(début, "%Y") as année , count(sess) as sessions 
+FROM session
+GROUP BY année
+
+3.6
+SELECT DATE_FORMAT(début, "%M") as mois , ROUND(COUNT(sess)/10,2) as sessions
+FROM session
+GROUP BY mois
+ORDER BY MONTH(début)
+
+REQUETES AVANCEES
 
