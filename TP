@@ -1,27 +1,31 @@
--- Q.1.1. Raison sociale et activité des entreprises, triées par activités.
+1.1. Raison sociale et activité des entreprises, triées par activités.
 SELECT   raison, activité
 FROM     entreprise
 ORDER BY activité
 
 
--- Q.1.2. Numéro des inscrits à la session CRUNGA.
+1.2. Numéro des inscrits à la session CRUNGA.
 SELECT inscrit
 FROM   inscrire
 WHERE  sess = 'CRUNGA'
 
 
--- Q.1.3. Nom des inscrits à la session CRUNGA. Avec jointure implicite.
+1.3.
+jointure implicite :
+
 SELECT nom
 FROM   inscrire I, participant P
 WHERE  sess = 'CRUNGA'
    AND I.inscrit = P.inscrit
 
--- Q.1.3. Nom des inscrits à la session CRUNGA. Avec jointure explicite.
+1.3 
+jointure explicite:
 SELECT nom
 FROM   inscrire JOIN participant USING (inscrit)
 WHERE  sess = 'CRUNGA'
 
--- Q.1.3. Nom des inscrits à la session CRUNGA. Avec imbrication.
+1.3
+Avec imbrication:
 SELECT nom
 FROM   participant
 WHERE  inscrit IN (
@@ -31,26 +35,26 @@ WHERE  inscrit IN (
        )
 
 
--- Q.1.4. Nom des particuliers inscrits à la session CRUNGA.
+1.4
 SELECT nom
 FROM   inscrire JOIN participant USING (inscrit)
 WHERE  sess = 'CRUNGA'
    AND entr IS NULL
 
 
--- Q.1.5. Raison sociale des entreprises ayant envoyé des participants. Avec jointure implicite.
+1.5
 SELECT   DISTINCT raison
 FROM     entreprise E, participant P
 WHERE    E.entr = p.entr
 ORDER BY raison
 
--- Q.1.5. Raison sociale des entreprises ayant envoyé des participants. Avec jointure explicite.
+1.5. 
 SELECT   DISTINCT raison
 FROM     entreprise JOIN participant USING (entr)
 ORDER BY raison
 
 
--- Q.1.6. Sessions d'août 84. MySQL.
+1.6. 
 SELECT sess, intitulé, date_format(début, '%a %d') AS jour
 FROM   session
 WHERE  début BETWEEN '1984-08-01' AND '1984-08-31'
