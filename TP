@@ -134,3 +134,61 @@ ORDER BY MONTH(début)
 
 REQUETES AVANCEES
 
+4.1
+SELECT DISTINCT sess
+FROM   inscrire
+WHERE  sess NOT IN (
+    SELECT sess
+    FROM   inscrire A JOIN inscrire B USING (date, sess)
+    WHERE  A.inscrit <> B.inscrit
+)
+
+4.2
+SELECT raison
+FROM entreprise LEFT JOIN participant USING (entr)
+WHERE participant.entr IS NULL
+
+4.3
+EXISTS :
+SELECT raison
+FROM entreprise E
+WHERE NOT EXISTS (
+  SELECT *
+  FROM participant P
+  WHERE E.entr = P.entr
+)
+
+IN:
+SELECT raison
+FROM entreprise
+WHERE entr NOT IN (
+  SELECT entr
+  FROM participant
+  WHERE entr IS NOT NULL
+)
+
+4.4
+SELECT   raison, count(*) as envoyés
+FROM     ENTREPRISE JOIN PARTICIPANT USING (entr)
+GROUP BY raison
+HAVING   count(*) > 3
+
+4.5
+SELECT   raison, count(inscrit) as envoyés
+FROM     ENTREPRISE LEFT JOIN PARTICIPANT USING (entr)
+GROUP BY raison
+HAVING   count(*) < 3
+
+4.6 
+1
+SELECT raison , COUNT(DISTINCT inscrit) as envoyes
+FROM entreprise JOIN participant using (entr)
+GROUP BY raison
+ORDER BY envoyes DESC
+LIMIT 1
+
+4.7
+SELECT prix*nb_inscrits as inscriptions , SUM(50*heures)+prime as salaires
+FROM animer JOIN session using (sess)
+WHERE sess="CRUNGA"
+GROUP BY sess
